@@ -9,6 +9,7 @@ We will create together a project in Spring integration framework to collect dat
 
  - Open VirtualBOX and run the VM.
  - Open STS: 
+ 	$ ./STS/sts-bundle/sts-3.7.3.RELEASE/STS
  
 
 ### Create an App for Twitter API access
