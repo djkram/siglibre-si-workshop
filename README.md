@@ -8,9 +8,35 @@ We will create together a project in Spring integration framework to collect dat
 ### Set Up your development environment
 
  - Open VirtualBOX and run the VM.
- - Open STS: 
- 	$ ./STS/sts-bundle/sts-3.7.3.RELEASE/STS
+ - Run STS: 
+
+	$> ./STS/sts-bundle/sts-3.7.3.RELEASE/STS
+
+- Install Mongodb:
+
+	$> sudo apt-get update
+	$> sudo apt-get install mongodb
  
+### Technologies
+
+On this whorkshop we will use:
+
+- Maven
+- Spring Boot
+- Spring Integration
+- TwitterAPI and Twitter4j
+- MongoDB
+
+### Clone and develop the application
+
+Clone this project in your terminal or Git Shell:
+
+	$ git clone https://github.com/djkram/siglibre-si-workshop.git
+
+Clone using STS:
+
+	File > Import > Git > Projects from Git > Clone Uri
+
 
 ### Create an App for Twitter API access
 
@@ -37,16 +63,6 @@ Active your Tokens:
 Get your Tokens:
 
 ![Create Twitter API App](img/app_twitter_5.png)
-
-### Clone and develop the application
-
-Clone this project in your terminal or Git Shell:
-
-	$ git clone https://github.com/djkram/bts-demo-integration.git
-
-Clone using STS:
-
-	File > Import > Git > Projects from Git > Clone Uri
 	
 #### Set UP your Twitter Api Credentials
 

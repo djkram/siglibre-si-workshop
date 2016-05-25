@@ -4,10 +4,14 @@
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:int="http://www.springframework.org/schema/integration"
 	xmlns:int-twitter="http://www.springframework.org/schema/integration/twitter"
+	xmlns:int-mongodb="http://www.springframework.org/schema/integration/mongodb"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
 						http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
 						http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd
-						http://www.springframework.org/schema/integration/twitter http://www.springframework.org/schema/integration/twitter/spring-integration-twitter.xsd">
+						http://www.springframework.org/schema/integration/twitter http://www.springframework.org/schema/integration/twitter/spring-integration-twitter.xsd
+						http://www.springframework.org/schema/integration/mongodb http://www.springframework.org/schema/integration/mongodb/spring-integration-mongodb.xsd
+						http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
 
 	<bean id="twitterTemplate"
 		class="org.springframework.social.twitter.api.impl.TwitterTemplate">
@@ -17,17 +21,55 @@
 		<constructor-arg value="${twitter.oauth.accessTokenSecret}" />
 	</bean>
 
-	<int-twitter:search-inbound-channel-adapter
-		id="searchAdapter" channel="sourceExtractor" query="${twitter.search.query}"
-		twitter-template="twitterTemplate">
-		<int:poller fixed-rate="3000" max-messages-per-poll="5" />
-	</int-twitter:search-inbound-channel-adapter>
+<!-- 	<int-twitter:search-inbound-channel-adapter -->
+<!-- 		id="searchAdapter"  -->
+<!-- 		channel="sourceExtractor"  -->
+<!-- 		query="${twitter.search.query}" -->
+<!-- 		twitter-template="twitterTemplate"> -->
+<!-- 		<int:poller fixed-rate="3000" max-messages-per-poll="5" /> -->
+<!-- 	</int-twitter:search-inbound-channel-adapter> -->
+	
+	<int:inbound-channel-adapter ref="twitterGeoInboundAdapter" method="receive" channel="sourceExtractor">
+    	<int:poller fixed-rate="3000"/>
+	</int:inbound-channel-adapter>
+	
+	<bean id="twitterGeoInboundAdapter" class="com.example.TwitterGeoInboundAdapter"></bean>
+
+<!-- 	<int:transformer  -->
+<!-- 		input-channel="sourceExtractor"  -->
+<!-- 		output-channel="twitterOut"  -->
+<!-- 		expression="payload.getUser().getLocation()"/> -->
 
 	<int:transformer 
-		input-channel="sourceExtractor" 
-		output-channel="twitterOut" 
-		expression="payload.getText()"/>
+		input-channel="geoInChannel"
+		output-channel="mongodbOutChannel"
+		ref="jsonTransformer"
+		method="transformtoJSON"/>
+		
+	<bean id="jsonTransformer" class="com.example.JSONTransformer"></bean>
 	
 	<int:logging-channel-adapter id="twitterOut" level="INFO"/>
+	
+	<!-- Filter No Geo -->
+	<int:filter 
+		input-channel="sourceExtractor" 
+		output-channel="geoInChannel"
+		expression="payload.getGeoLocation()!=null" />
+		
+	
+	<!-- MongoDB -->
+	<mongo:db-factory id="mongoDbFactory" 
+		host="${mongodb.host}"
+		dbname="${mongodb.database}" 
+		username="${mongodb.username}" 
+		password="${mongodb.password}" />
+		
+
+	<!-- Adding messages in MongoDB -->
+	<int-mongodb:outbound-channel-adapter
+		id="mongodbOutChannel" 
+		collection-name="${mongodb.collection}"
+		mongodb-factory="mongoDbFactory" />
+		
 
 </beans>
