@@ -2,7 +2,7 @@
 
 This is an exemple for the hands on session for SIGLibre.
 
-We will create together a project in Spring integration framework to collect data from twitter API and feed a MongoDB.
+We will create together a project in Spring integration framework to collect GEO data from twitter API and feed a MongoDB.
 
 
 ### Set Up your development environment
@@ -16,16 +16,6 @@ We will create together a project in Spring integration framework to collect dat
 
 	$> sudo apt-get update
 	$> sudo apt-get install mongodb
- 
-### Technologies
-
-On this whorkshop we will use:
-
-- Maven
-- Spring Boot
-- Spring Integration
-- TwitterAPI and Twitter4j
-- MongoDB
 
 ### Clone and develop the application
 
@@ -36,6 +26,54 @@ Clone this project in your terminal or Git Shell:
 Clone using STS:
 
 	File > Import > Git > Projects from Git > Clone Uri
+
+### Explore the the application
+
+![Dev App](img/env-dev.png =250x)
+
+We Will work on:
+- **pom.xml** : for manage dependencies
+- **twitter-integration-connection.xml** : for spring integration configuration
+- **application.properties** : for external variables
+- **src/man/java > com.example** : to implement nedded classes
+
+#### Technologies
+
+On this whorkshop we will use:
+
+- Maven
+- Spring Boot
+- Spring Integration
+- TwitterAPI and Twitter4j
+- MongoDB
+
+## Hands On workshop Step by Step
+
+### Step 1: Configuring the dependencies:
+
+exploring the **pom.xml**
+
+### Step 2: Understanding Spring Integration
+
+Reference documentation of spring integration: [http://docs.spring.io/spring-integration/reference/htmlsingle/](http://docs.spring.io/spring-integration/reference/htmlsingle/)
+
+- Read the [Part III](http://docs.spring.io/spring-integration/reference/htmlsingle/#spring-integration-introduction) for an overview.
+
+- Read the [Part IV](http://docs.spring.io/spring-integration/reference/htmlsingle/#spring-integration-core-messaging) for a deep detail.
+
+- Read the [Part V](http://docs.spring.io/spring-integration/reference/htmlsingle/#spring-integration-endpoints) to know the endpoints supported.
+
+
+Open the configuration file: 
+
+	src/main/resources/twitter-integration-connection.xml
+	
+
+Contains this data ingestion flow:
+
+![Spring integration flow basic](img/flow-si.png)
+
+![Spring integration flow complete](img/flow-si-complete.png)
 
 
 ### Create an App for Twitter API access
@@ -78,21 +116,6 @@ Set your credentials:
 	twitter.oauth.accessTokenSecret=
 	twitter.search.query=
 
-Open the configuration file: 
-
-	src/main/resources/twitter-integration-connection.xml
-
-Contains this data ingestion flow:
-
-![Spring integration flow](img/flow-si.png)
-
-Reference documentation of spring integration: [http://docs.spring.io/spring-integration/reference/htmlsingle/](http://docs.spring.io/spring-integration/reference/htmlsingle/)
-
-- Read the [Part III](http://docs.spring.io/spring-integration/reference/htmlsingle/#spring-integration-introduction) for an overview.
-
-- Read the [Part IV](http://docs.spring.io/spring-integration/reference/htmlsingle/#spring-integration-core-messaging) for a deep detail.
-
-- Read the [Part V](http://docs.spring.io/spring-integration/reference/htmlsingle/#spring-integration-endpoints) to know the endpoints supported.
 
 ### HOMEWORK
 
