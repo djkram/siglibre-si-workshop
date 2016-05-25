@@ -28,17 +28,17 @@
 <!-- 		twitter-template="twitterTemplate"> -->
 <!-- 		<int:poller fixed-rate="3000" max-messages-per-poll="5" /> -->
 <!-- 	</int-twitter:search-inbound-channel-adapter> -->
+
+<!-- 	<int:transformer  -->
+<!-- 		input-channel="sourceExtractor"  -->
+<!-- 		output-channel="twitterOut"  -->
+<!-- 		expression="payload.getUser().getLocation()"/> -->
 	
 	<int:inbound-channel-adapter ref="twitterGeoInboundAdapter" method="receive" channel="sourceExtractor">
     	<int:poller fixed-rate="3000"/>
 	</int:inbound-channel-adapter>
 	
 	<bean id="twitterGeoInboundAdapter" class="com.example.TwitterGeoInboundAdapter"></bean>
-
-<!-- 	<int:transformer  -->
-<!-- 		input-channel="sourceExtractor"  -->
-<!-- 		output-channel="twitterOut"  -->
-<!-- 		expression="payload.getUser().getLocation()"/> -->
 
 	<int:transformer 
 		input-channel="geoInChannel"
