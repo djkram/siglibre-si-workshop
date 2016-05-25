@@ -18,9 +18,9 @@ public class JSONTransformer {
 		
 		ObjectMapper mapper = new ObjectMapper();
 		
-		Status tweet = messageIn.getPayload();
+		// TODO Transform messageIn i JSON using mapper
 		
-		String json = mapper.writeValueAsString(tweet);
+		String json = ""; //FIXME
 		
 		Message<String> messageOut = MessageBuilder.withPayload(json).build();
 		

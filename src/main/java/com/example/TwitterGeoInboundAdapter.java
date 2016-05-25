@@ -19,9 +19,9 @@ public class TwitterGeoInboundAdapter {
 	
 	public Message<?> receive() throws IOException{
 		
-		Status tweet = twitterStreamService.pollTweet();
+		// TODO get tweet from twitterStreamService
 		
-		if (tweet == null) return null;
+		Object tweet = null; //FIXME
 		
 		Message<?> messageIn = MessageBuilder.withPayload(tweet).build();
 		log.debug("messageIn: " + messageIn.getPayload());
