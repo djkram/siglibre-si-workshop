@@ -261,7 +261,7 @@ Check data loading in MongoDB
 	$ mongo 
 	> db.siglibre.tweets.count()
 
-### HOMEWORK
+### Extra Task
 
 - Modify this project tget data from files:
 
