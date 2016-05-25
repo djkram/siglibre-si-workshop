@@ -91,16 +91,19 @@ public class TwitterStreamService {
 
 		};
 
-		Float west = 0f;
+		
 		Float south = 0f;
-		Float east = 0f;
+		Float west = 0f;
+		
 		Float north = 0f;
+		Float east = 0f;
 
 		twitterStream.addListener(listener);
 		
 		FilterQuery tweetFilterQuery = new FilterQuery();
-		tweetFilterQuery.locations(new double[][] { new double[] { south, west },
-				new double[] { north, east } });
+		tweetFilterQuery.locations(new double[][] { 
+				new double[] { west, south,  },
+				new double[] { east, north } });
 		// See https://dev.twitter.com/docs/streaming-apis/parameters#locations
 		// for proper location doc.
 		// Note that not all tweets have location metadata set.
