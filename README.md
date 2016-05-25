@@ -29,7 +29,7 @@ Clone using STS:
 
 ### Explore the the application
 
-![Dev App](img/env-dev.png =250x)
+![Dev App](img/env-dev.png)
 
 We Will work on:
 - **pom.xml** : for manage dependencies
