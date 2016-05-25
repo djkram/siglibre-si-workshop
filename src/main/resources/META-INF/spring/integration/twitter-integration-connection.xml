@@ -24,59 +24,21 @@
 		<constructor-arg value="${twitter.oauth.accessTokenSecret}" />
 	</bean>
 
-<!-- 	<int-twitter:search-inbound-channel-adapter -->
-<!-- 		id="searchAdapter"  -->
-<!-- 		channel="sourceExtractor"  -->
-<!-- 		query="${twitter.search.query}" -->
-<!-- 		twitter-template="twitterTemplate"> -->
-<!-- 		<int:poller fixed-rate="3000" max-messages-per-poll="5" /> -->
-<!-- 	</int-twitter:search-inbound-channel-adapter> -->
+	<int-twitter:search-inbound-channel-adapter
+		id="searchAdapter" 
+		channel="sourceExtractor" 
+		query="${twitter.search.query}"
+		twitter-template="twitterTemplate">
+		<int:poller fixed-rate="3000" max-messages-per-poll="5" />
+	</int-twitter:search-inbound-channel-adapter>
 	
-<!-- 	<int:transformer  -->
-<!-- 		input-channel="sourceExtractor"  -->
-<!-- 		output-channel="twitterOut"  -->
-<!-- 		expression="payload.getText()"/> -->
-	
-<!-- 	<int:logging-channel-adapter id="sourceExtractor" level="INFO"/> -->
+	<int:logging-channel-adapter id="sourceExtractor" level="INFO"/>
 	
 	<!-- Step 2: Create a new Inbound to get Geo data -->
-	
-	<int:inbound-channel-adapter ref="twitterGeoInboundAdapter" method="receive" channel="sourceExtractor">
-    	<int:poller fixed-rate="3000"/>
-	</int:inbound-channel-adapter>
-	
-	<bean id="twitterGeoInboundAdapter" class="com.example.TwitterGeoInboundAdapter"></bean>
 
 	<!-- Step 3: Tranform to JSON -->
-
-	<int:transformer 
-		input-channel="geoInChannel"
-		output-channel="mongodbOutChannel"
-		ref="jsonTransformer"
-		method="transformtoJSON"/>
-	
-	<bean id="jsonTransformer" class="com.example.JSONTransformer"></bean>
-	
-	<!-- Filter No Geo -->
-	<int:filter 
-		input-channel="sourceExtractor" 
-		output-channel="geoInChannel"
-		expression="payload.getGeoLocation()!=null" />
 		
 	<!-- Step 4: Mongo Ingestion -->
 	
-	<!-- MongoDB -->
-	<mongo:db-factory id="mongoDbFactory" 
-		host="${mongodb.host}"
-		dbname="${mongodb.database}" 
-		username="${mongodb.username}" 
-		password="${mongodb.password}" />	
-
-	<!-- Adding messages in MongoDB -->
-	<int-mongodb:outbound-channel-adapter
-		id="mongodbOutChannel" 
-		collection-name="${mongodb.collection}"
-		mongodb-factory="mongoDbFactory" />
-		
 
 </beans>

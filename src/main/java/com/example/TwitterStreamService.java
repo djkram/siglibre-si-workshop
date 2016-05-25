@@ -91,10 +91,10 @@ public class TwitterStreamService {
 
 		};
 
-		Float west = 40.38002840251183f;
-		Float south = 0.3076171875f;
-		Float east = 43.13306116240612f;
-		Float north = 3.6474609374999996f;
+		Float west = 0f;
+		Float south = 0f;
+		Float east = 0f;
+		Float north = 0f;
 
 		twitterStream.addListener(listener);
 		

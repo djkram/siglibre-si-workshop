@@ -71,7 +71,7 @@ This file is a configuratin XML to dessing the workflows on spring inegration. Y
 
 This is the workflow currently:
 
-![Spring integration flow basic](img/flow-si.png)
+![Spring integration flow basic](img/flow-si-basic.png)
 
 And we will arrive on that:
 
