@@ -20,16 +20,6 @@ public class JSONTransformer {
 		
 		Status tweet = messageIn.getPayload();
 		
-		GeoLocation geo = tweet.getGeoLocation();
-		
-		String result;
-		
-//		if (geo == null){
-//			result = "No GeoLocation";
-//		}else{
-//			result = geo.toString();
-//		}
-		
 		String json = mapper.writeValueAsString(tweet);
 		
 		Message<String> messageOut = MessageBuilder.withPayload(json).build();

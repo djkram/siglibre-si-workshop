@@ -30,6 +30,7 @@ Clone using STS:
 ### Explore the the application
 
 Open the siglibre-si-workshop on your STS
+
 ![Dev App](img/env-dev.png)
 
 We Will work on:
@@ -147,22 +148,125 @@ Add a transformer:
 
 ```xml
 <int:transformer 
-input-channel="sourceExtractor" 
-output-channel="twitterOut" 
+input-channel="CHANNEL-NAME???" 
+output-channel="CHANNEL-NAME???" 
 expression="payload.getText()"/>
 ```
 
+and configure the names of the Channels
 
-Solution -> https://gist.github.com/djkram/99d5eefae5c0e35d4c0d2332366a5d21
+**Then Run It Again ;)**
+
+Solution [be fair] -> https://gist.github.com/djkram/99d5eefae5c0e35d4c0d2332366a5d21
+
+**But if I want to see more things about the Tweet?**
+
+Explore the Object Tweet from the Spring social library:
+[http://docs.spring.io/spring-social-twitter/docs/current/apidocs/org/springframework/social/twitter/api/Tweet.html](http://docs.spring.io/spring-social-twitter/docs/current/apidocs/org/springframework/social/twitter/api/Tweet.html)
+
+Put Other "expresion" to see the User Location.
+
+
+### Step 2: Create a new Inbound to get Geo data
+
+Reference:
+- [http://docs.spring.io/spring-integration/reference/html/messaging-channels-section.html](- http://docs.spring.io/spring-integration/reference/html/messaging-channels-section.html)
+
+Disable the last Inbound: 
+
+	search-inbound-channel-adapter
+
+Add on XML:
+
+```xml
+<int:inbound-channel-adapter ref="twitterGeoInboundAdapter" method="receive" channel="sourceExtractor">
+<int:poller fixed-rate="3000"/>
+</int:inbound-channel-adapter>
+	
+<bean id="twitterGeoInboundAdapter" class="com.example.TwitterGeoInboundAdapter"></bean>
+```
+
+Now we have to implement the Class: TwitterGeoInboundAdapter
+
+Open the Classes:
+	
+	TwitterStreamService.java
+	TwitterGeoInboundAdapter.java
+
+Complete the missing parts to create a new Twitter Inbound.
+
+Solution [be fair] -> https://gist.github.com/djkram/552fd84110ade6ce97453f554ce34b03
+
+### Step 3: Tranform to JSON
+
+Add on XML:
+
+```xml
+<int:transformer 
+input-channel="geoInChannel"
+output-channel="mongodbOutChannel"
+ref="jsonTransformer"
+method="transformtoJSON"/>
+	
+<bean id="jsonTransformer" class="com.example.JSONTransformer"></bean>
+```
+
+Open the Class:
+
+	JSONTransformer.java
+	
+Complete the missing parts to create a new Transformer.
+
+Add on XML:
+```xml
+<int:filter 
+input-channel="sourceExtractor" 
+output-channel="geoInChannel"
+expression="payload.getGeoLocation()!=null" />
+```
+
+**Then Run It Again ;)**
+
+### Step 4: Mongo Ingestion
+
+Add on XML:
+```xml
+<!-- MongoDB -->
+<mongo:db-factory id="mongoDbFactory" 
+host="${mongodb.host}"
+dbname="${mongodb.database}" 
+username="${mongodb.username}" 
+password="${mongodb.password}" />	
+
+<!-- Adding messages in MongoDB -->
+<int-mongodb:outbound-channel-adapter
+id="mongodbOutChannel" 
+collection-name="${mongodb.collection}"
+mongodb-factory="mongoDbFactory" />
+```
+
+Configure the Mongo credentials:
+
+	# Mongo Credentials <PUT YOUR CREDENTIALS>
+	mongodb.host=
+	mongodb.username=
+	mongodb.password=
+	mongodb.database=siglibre
+	mongodb.collection=tweets
+
+**Then Run It Again ;)**
+
+Check data loading in MongoDB
+	
+	$ mongo 
+	> db.siglibre.tweets.count()
 
 ### HOMEWORK
 
-- Modify this project to store the tweets on a file
+- Modify this project tget data from files:
 
-- File endpoint Reference (outbound): [http://docs.spring.io/spring-integration/reference/htmlsingle/#file-writing](http://docs.spring.io/spring-integration/reference/htmlsingle/#file-writing)
+- Download this dataset (All Tweets in Catalunya on 2014 [6GB])
+	
+	wget https://s3-eu-west-1.amazonaws.com/eurecat-dataset-historic/twitter/eurecat-bts-dataset-twitter-2015.tar.gz
 
-- configuration file example: [https://github.com/spring-projects/spring-integration-samples/blob/master/basic/file/src/main/resources/META-INF/spring/integration/fileCopyDemo-file.xml](https://github.com/spring-projects/spring-integration-samples/blob/master/basic/file/src/main/resources/META-INF/spring/integration/fileCopyDemo-file.xml)
-
-- **Create a Git repository in GitHub, push your project and send the link to your teacher.**
-
-- How to push a Git to GItHub: [https://help.github.com/articles/adding-an-existing-project-to-github-using-the-command-line/](https://help.github.com/articles/adding-an-existing-project-to-github-using-the-command-line/)
+- File endpoint Reference (outbound): [http://docs.spring.io/spring-integration/reference/htmlsingle/#file-reading](http://docs.spring.io/spring-integration/reference/htmlsingle/#file-reading)
